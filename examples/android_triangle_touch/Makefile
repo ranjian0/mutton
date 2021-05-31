@@ -8,4 +8,4 @@ clean:
 	rm -rf build
 	rm -f my-release-key.keystore
 
-include ../../makefiles/AndroidAPK.mk
+include $(ROOT_DIR)/makefiles/AndroidAPK.mk

@@ -1,8 +1,8 @@
 ROOT_DIR:=$(abspath ../../)
 EXE:=desktop_triangle
 
-include ../../makefiles/OS.mk
-include ../../makefiles/Directories.mk
+include $(ROOT_DIR)/makefiles/OS.mk
+include $(ROOT_DIR)/makefiles/Directories.mk
 
 LDFLAGS:=-L$(DESKTOP_BUILD_DIR)
 LDFLAGS+= -lDesktop -lm -ldl -lpthread
