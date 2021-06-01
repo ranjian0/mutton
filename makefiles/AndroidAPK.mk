@@ -74,13 +74,14 @@ $(KEYSTOREFILE) :
 manifest: AndroidManifest.xml
 
 AndroidManifest.xml :
-	rm -rf src/AndroidManifest.xml
+
+	rm -rf build/apk/AndroidManifest.xml
 	PACKAGENAME=$(PACKAGENAME) \
 		ANDROIDVERSION=$(ANDROIDVERSION) \
 		ANDROIDTARGET=$(ANDROIDTARGET) \
 		APPNAME=$(APPNAME) \
 		LABEL=$(LABEL) envsubst '$$ANDROIDTARGET $$ANDROIDVERSION $$APPNAME $$PACKAGENAME $$LABEL' \
-		< src/AndroidManifest.xml.template > src/AndroidManifest.xml
+		< $(ROOT_DIR)/resources/AndroidManifest.xml.template > build/apk/AndroidManifest.xml
 
 
 # Build android native library
@@ -111,7 +112,7 @@ apk : $(ANDROID_TARGETS) AndroidManifest.xml keystore
 	mkdir -p build/apk/assets
 	cp -r src/assets/* build/apk/assets
 	rm -rf build/temp.apk
-	$(AAPT) package -f -F build/temp.apk -I $(ANDROIDSDK)/platforms/android-$(ANDROIDVERSION)/android.jar -M src/AndroidManifest.xml -S src/res -A build/apk/assets -v --target-sdk-version $(ANDROIDTARGET)
+	$(AAPT) package -f -F build/temp.apk -I $(ANDROIDSDK)/platforms/android-$(ANDROIDVERSION)/android.jar -M build/apk/AndroidManifest.xml -S src/res -A build/apk/assets -v --target-sdk-version $(ANDROIDTARGET)
 	unzip -o build/temp.apk -d build/apk
 	rm -rf build/apk.apk
 	cd build/apk && zip -D9r ../apk.apk . && zip -D0r ../apk.apk ./resources.arsc ./AndroidManifest.xml
