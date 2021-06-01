@@ -5,10 +5,11 @@ include ../makefiles/AndroidToolchain.mk
 all: build_android build_desktop
 
 # Build Android Static Library
-ANDROID_LIB_NAME:=libMobile.a
+ANDROID_LIB_NAME:= libMobile.a
 ANDROID_LIB_SRCS:= $(NDK)/sources/android/native_app_glue/android_native_app_glue.c
 ANDROID_LIB_SRCS+= $(LIB_DIR)/extern/glfm/src/glfm_platform_android.c
-ANDROID_LIB_OBJS:=$(patsubst %.c,%.o,$(ANDROID_LIB_SRCS))
+ANDROID_LIB_SRCS+= $(wildcard $(LIB_DIR)/intern/*.c)
+ANDROID_LIB_OBJS:= $(patsubst %.c,%.o,$(ANDROID_LIB_SRCS))
 
 ANDROID_CFLAGS+= -I$(LIB_DIR)/extern/glfm/include -I$(NDK)/sources/android/native_app_glue -I$(NDK)/toolchains/llvm/prebuilt/$(OS_NAME)/sysroot/usr/include -I$(NDK)/toolchains/llvm/prebuilt/$(OS_NAME)/sysroot/usr/include/android -fPIC -DANDROIDVERSION=$(ANDROIDVERSION)
 
@@ -48,11 +49,11 @@ build_android: $(ANDROID_LIB_TARGETS)
 # Build Desktop Static Library
 include ../makefiles/GLFW.mk 
 
-DESKTOP_LIB_NAME:=libDesktop.a
-DESKTOP_LIB_SRCS:=$(foreach src,$(GLFW_SRCS),$(LIB_DIR)/extern/glfw/src/$(src))
-DESKTOP_LIB_SRCS+=$(shell find $(LIB_DIR)/extern/GLAD -name "*.c")
-
-DESKTOP_LIB_OBJS:=$(patsubst %.c,%.o,$(DESKTOP_LIB_SRCS))
+DESKTOP_LIB_NAME:= libDesktop.a
+DESKTOP_LIB_SRCS:= $(foreach src,$(GLFW_SRCS),$(LIB_DIR)/extern/glfw/src/$(src))
+DESKTOP_LIB_SRCS+= $(shell find $(LIB_DIR)/extern/GLAD -name "*.c")
+DESKTOP_LIB_SRCS+= $(wildcard $(LIB_DIR)/intern/*.c)
+DESKTOP_LIB_OBJS:= $(patsubst %.c,%.o,$(DESKTOP_LIB_SRCS))
 
 DESKTOP_CC=clang
 DESKTOP_CFLAGS+= -I$(LIB_DIR)/extern/glfw/include -I$(LIB_DIR)/extern/GLAD #-fPIC
