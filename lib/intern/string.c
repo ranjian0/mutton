@@ -55,6 +55,8 @@ char* str_replace(char *str, char *replace_str) {
     
 }
 
+#if 0 // TESTING
+
 int main(int argc, char *argv[]) {
 
     char *result = str_cat("Hello", "World");
@@ -74,3 +76,5 @@ int main(int argc, char *argv[]) {
 
     return 1;
 }
+
+#endif
