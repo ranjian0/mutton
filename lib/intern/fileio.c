@@ -28,7 +28,7 @@ int mutton_get_resdir(char *path, size_t path_max) {
     }
     path[0] = 0;
     return -1;
-#elif defined(PLATFORM_IOS)
+#elif defined(PLATFORM_APPLE)
     int result = -1;
     FC_AUTORELEASEPOOL_BEGIN
     CFBundleRef bundle = CFBundleGetMainBundle();
@@ -142,7 +142,7 @@ int mutton_get_datadir(const char *app_id, char *path, size_t path_max) {
         path[0] = 0;
         return -1;
     }
-#elif defined(PLATFORM_IOS)
+#elif defined(PLATFORM_APPLE)
     int result = -1;
     const NSUInteger NSApplicationSupportDirectory = 14;
     const NSUInteger NSUserDomainMask = 1;
@@ -271,7 +271,7 @@ int mutton_get_locale(char *locale, size_t locale_max) {
         strncpy(locale, lang, locale_max);
         locale[locale_max - 1] = 0;
     }
-#elif defined(PLATFORM_IOS)
+#elif defined(PLATFORM_APPLE)
     FC_AUTORELEASEPOOL_BEGIN
     CFArrayRef languages = CFLocaleCopyPreferredLanguages();
     if (languages) {
@@ -509,7 +509,7 @@ static FILE *_fc_android_fopen(const char *filename, const char *mode) {
     }
 }
 
-#define printf(...) __android_log_print(ANDROID_LOG_INFO, "stdout", __VA_ARGS__)
+#define printf(...) __android_log_print(ANDROID_LOG_INFO, "Mutton", __VA_ARGS__)
 #define fopen(filename, mode) _fc_android_fopen(filename, mode)
 
 #endif /* PLATFORM_ANDROID */
