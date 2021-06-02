@@ -1,0 +1,32 @@
+FREETYPE_SRCS = autofit/autofit.c \
+				base/ftbase.c \
+				base/ftbbox.c \
+				base/ftbitmap.c \
+				base/ftdbgmem.c \
+				base/ftdebug.c \
+				base/ftglyph.c \
+				base/ftinit.c \
+				base/ftstroke.c \
+				base/ftsynth.c \
+				base/ftsystem.c \
+				bdf/bdf.c \
+				bzip2/ftbzip2.c \
+				cache/ftcache.c \
+				cff/cff.c \
+				cid/type1cid.c \
+				gxvalid/gxvalid.c \
+				gzip/ftgzip.c \
+				lzw/ftlzw.c \
+				otvalid/otvalid.c \
+				pcf/pcf.c \
+				pfr/pfr.c \
+				psaux/psaux.c \
+				pshinter/pshinter.c \
+				psnames/psnames.c \
+				raster/raster.c \
+				sfnt/sfnt.c \
+				smooth/smooth.c \
+				truetype/truetype.c \
+				type1/type1.c \
+				type42/type42.c \
+				winfonts/winfnt.c
