@@ -9,6 +9,7 @@ static void onSurfaceRefresh(GLFMDisplay *display);
 static void onSurfaceDestroyed(GLFMDisplay *display);
 static bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, double x, double y);
 static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, int modifiers);
+static void onSensor(GLFMDisplay *display, GLFMSensorEvent sev);
 
 void glfmMain(GLFMDisplay *display) {
     app = mutton_main();
@@ -26,6 +27,10 @@ void glfmMain(GLFMDisplay *display) {
     glfmSetRenderFunc(display, onFrame);
     glfmSetTouchFunc(display, onTouch);
     glfmSetKeyFunc(display, onKey);
+    glfmSetSensorFunc(display, GLFMSensorGyroscope,onSensor);
+    glfmSetSensorFunc(display, GLFMSensorAccelerometer,onSensor);
+    glfmSetSensorFunc(display, GLFMSensorMagnetometer,onSensor);
+    glfmSetSensorFunc(display, GLFMSensorRotationMatrix,onSensor);
 }
 
 
@@ -73,3 +78,26 @@ static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, i
     return true;
 }
 
+static void onSensor(GLFMDisplay *display, GLFMSensorEvent sev) {
+    app_t this_app = mutton_get_app();
+    SensorEvent ev;
+    ev.type = sev.sensor;
+    ev.timestamp = sev.timestamp;
+
+    if(sev.sensor == GLFMSensorRotationMatrix) {
+        ev.matrix.m00 = sev.matrix.m00;
+        ev.matrix.m10 = sev.matrix.m10;
+        ev.matrix.m20 = sev.matrix.m20;
+        ev.matrix.m01 = sev.matrix.m01;
+        ev.matrix.m11 = sev.matrix.m11;
+        ev.matrix.m21 = sev.matrix.m21;
+        ev.matrix.m02 = sev.matrix.m02;
+        ev.matrix.m12 = sev.matrix.m12;
+        ev.matrix.m22 = sev.matrix.m22;        
+    } else {
+        ev.vector.x = sev.vector.x;
+        ev.vector.y = sev.vector.y;
+        ev.vector.z = sev.vector.z;
+    }
+    this_app.event.sensor(ev);
+}
