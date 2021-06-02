@@ -4,6 +4,12 @@
 #include "defs.h"
 #include "event.h"
 
+#if defined(PLATFORM_ANDROID)
+#   include "input/input_android.h"
+#else
+#   include "input/input_desktop.h"
+#endif
+
 typedef struct app_t 
 {
     void (* init)();
