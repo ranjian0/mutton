@@ -70,6 +70,20 @@ void my_init() {
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
                           sizeof(Vertex), (void*) offsetof(Vertex, col));
 
+    printf("%f\n", mutton_get_time());
+    char resdir[1024];
+    mutton_get_resdir(resdir, 1024);
+    printf("%s\n", resdir);
+
+    char locale[1024];
+    mutton_get_locale(locale, 1024);
+    printf("%s\n", locale);
+
+    char datadir[1024];
+    mutton_get_datadir("DeskApp", datadir, 1024);
+    printf("%s\n", datadir);
+
+
 }
 
 void my_update() {
@@ -79,8 +93,6 @@ void my_update() {
     glUseProgram(program);
     glBindVertexArray(vertex_array);
     glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    // printf("time - %f\n", app_get_time());
 }
 
 void my_shutdown() {
