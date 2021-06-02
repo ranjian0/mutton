@@ -1,4 +1,7 @@
 #include "mutton.h"
+#include <android/log.h>
+
+#define printf(...) __android_log_print(ANDROID_LOG_INFO, "Mutton", __VA_ARGS__)
 
 void app_init() {
     printf("%f\n", mutton_get_time());
@@ -32,11 +35,18 @@ void on_touch(TouchEvent ev) {
     printf("Touch Event at %f, %f\n", ev.x, ev.y);
 }
 
+void on_sensor(SensorEvent ev) {
+    if(ev.type == SENSOR_GYROSCOPE) {
+        printf("Sensor (%f, %f, %f)\n", ev.vector.x, ev.vector.y, ev.vector.z);
+    }
+}
+
 app_t mutton_main() {
     return (app_t) {
         .init = app_init,
         .update = app_update,
         .shutdown = app_shutdown,
-        .event.touch = on_touch
+        .event.touch = on_touch,
+        .event.sensor = on_sensor
     };
 }

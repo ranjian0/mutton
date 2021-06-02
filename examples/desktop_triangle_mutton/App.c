@@ -101,11 +101,21 @@ void my_shutdown() {
 }
 
 void on_key(KeyEvent ev) {
-    printf("Key pressed %d\n", ev.key);
+    if (ev.key == KEY_ESCAPE) {
+        printf("Key pressed space\n");
+    }
+    if(ev.action == ACTION_REPEAT) {
+        printf("key repeating..\n");
+    }
 }
 
 void on_mouse(MouseEvent ev) {
-    printf("mouse pressed %d\n", ev.button);
+    if(ev.button == MOUSE_BUTTON_LEFT) {
+        printf("mouse pressed left\n");
+    }
+    if(ev.action == ACTION_RELEASE) {
+        printf("button released..\n");
+    }
 }
 
 void on_scroll(MouseScrollEvent ev) {
