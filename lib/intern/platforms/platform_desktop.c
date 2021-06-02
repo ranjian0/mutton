@@ -1,4 +1,4 @@
-#include "mutton.h"
+#include "../mutton.h"
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 static void mouse_callback(GLFWwindow *win, int button, int action, int mod);

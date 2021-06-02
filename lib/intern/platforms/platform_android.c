@@ -1,4 +1,4 @@
-#include "mutton.h"
+#include "../mutton.h"
 #include "glfm.h"
 
 static bool needs_redraw = true;
