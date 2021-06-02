@@ -71,7 +71,12 @@ static app_t app = {
     .window_height = 500,
 };
 
+/*
+ * Entry point function mutton applications, must be defined in all applications
+ * and must return an app object
+ */
 app_t mutton_main();
+
 static app_t mutton_get_app() { return app; }
 static int mutton_get_width() { return app.window_width; }
 static int mutton_get_height() { return app.window_height; }
