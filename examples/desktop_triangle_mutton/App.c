@@ -100,31 +100,25 @@ void my_shutdown() {
 
 }
 
-void on_key(int key, bool pressed, int mod) {
-    if(pressed)
-        printf("Key pressed %d\n", key);
-    else
-        printf("Key released %d\n", key);
+void on_key(KeyEvent ev) {
+    printf("Key pressed %d\n", ev.key);
 }
 
-void on_mouse(int button, bool pressed, int mod) {
-    if(pressed)
-        printf("mouse pressed %d\n", button);
-    else
-        printf("mouse released %d\n", button);
+void on_mouse(MouseEvent ev) {
+    printf("mouse pressed %d\n", ev.button);
 }
 
-void on_scroll(double dx, double dy) {
-    printf("Mouse Scrolled (%f, %f)\n", dx, dy);
+void on_scroll(MouseScrollEvent ev) {
+    printf("Mouse Scrolled (%f, %f)\n", ev.dx, ev.dy);
 }
 
-void on_move(double xpos, double ypos) {
-    printf("Mouse move (%f, %f)\n", xpos, ypos);
+void on_move(MouseMoveEvent ev) {
+    printf("Mouse move (%f, %f)\n", ev.xpos, ev.ypos);
 }
 
 app_t mutton_main() {
     return (app_t){
-        .window_title = "Sample Game",
+        .window_title = "Triangle",
         .window_width = 800,
         .window_height = 600,
         .init = my_init,
