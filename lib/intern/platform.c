@@ -3,9 +3,6 @@
 #ifdef PLATFORM_ANDROID
 
 #else // Dekstop Applications
-#include "glad/gl.h"
-#define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
 
 double mutton_get_time() { return glfwGetTime(); }
 
@@ -46,6 +43,8 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
+
+// Main Desktop Method
 
 int main(int argv, char** argc) {
     app = mutton_main();
