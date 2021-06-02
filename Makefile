@@ -10,6 +10,5 @@ $(SUBDIRS):
 clean:
 	@rm -rf build
 	@$(MAKE) -C examples clean
-	@$(MAKE) -C lib clean
 
 	
