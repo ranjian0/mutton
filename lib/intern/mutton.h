@@ -23,7 +23,17 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "ft2build.h"
+#include FT_FREETYPE_H
+
 // APPLICATION DEFINITION AND PLATFORM HOOKS
+#ifdef PLATFORM_ANDROID
+#include "glfm.h"
+#else
+#include "glad/gl.h"
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
+#endif
 
 typedef struct event_t
 {
