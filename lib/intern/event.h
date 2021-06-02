@@ -31,6 +31,23 @@ typedef struct TouchEvent {
     double x, y;
 } TouchEvent;
 
+typedef struct SensorEvent {
+    int type;
+    double timestamp;
+
+    union {
+        struct {
+            double x, y, z;
+        } vector;
+        struct {
+            double m00, m01, m02;
+            double m10, m11, m12;
+            double m20, m21, m22;
+        } matrix;
+    };
+
+} SensorEvent;
+
 typedef struct event_t
 {
     void (*resize)(ResizeEvent ev);
@@ -41,6 +58,7 @@ typedef struct event_t
     void (*move)(MouseMoveEvent ev);
 
     void (*touch)(TouchEvent ev);
+    void (*sensor)(SensorEvent ev);
 
 } event_t;
 
