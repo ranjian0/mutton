@@ -52,7 +52,7 @@ char** str_split(char *str, char delim, size_t *outLen) {
 }
 
 char* str_replace(char *str, char *replace_str) {
-    
+    return NULL;
 }
 
 #if 0 // TESTING
