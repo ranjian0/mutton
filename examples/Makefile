@@ -1,4 +1,4 @@
-SUBDIRS = android_triangle android_triangle_touch desktop_triangle
+SUBDIRS = android_triangle desktop_triangle
 
 all: $(SUBDIRS)
 
