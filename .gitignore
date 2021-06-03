@@ -1,5 +1,4 @@
 build
 *.o
 *.a
-.vscode
 *.keystore

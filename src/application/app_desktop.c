@@ -1,9 +1,37 @@
-#include "mutton.h"
+#include "utils/Defs.h"
 
-int mutton_get_resdir(char *path, size_t path_max) {
+int app_file_close(FILE *f) {
+    if(f) {
+        return fclose(f);
+    } else {
+        return 0;
+    }
+}
+
+FILE* app_file_open(const char *filename, const char *mode) {
+#if defined(PLATFORM_WINDOWS)
+    FILE *file = NULL;
+    fopen_s(&file, filename, mode);
+    return file;
+#else
+    return fopen(filename, mode);
+#endif
+}
+
+void app_print(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    printf(fmt, args);
+    va_end(args);        
+
+}
+
+
+int app_get_resdir(char *path, size_t path_max) {
     if (!path || path_max == 0) {
         return -1;
     }
+    
 #if defined(PLATFORM_WINDOWS)
     DWORD length = GetModuleFileNameA(NULL, path, path_max);
     if (length > 0 && length < path_max) {
@@ -31,7 +59,7 @@ int mutton_get_resdir(char *path, size_t path_max) {
 #elif defined(PLATFORM_APPLE)
     int result = -1;
     FC_AUTORELEASEPOOL_BEGIN
-    CFBundleRef bundle = CFBundleGetMainBundle();
+        CFBundleRef bundle = CFBundleGetMainBundle();
     if (bundle) {
         CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(bundle);
         if (resourcesURL) {
@@ -52,19 +80,16 @@ int mutton_get_resdir(char *path, size_t path_max) {
         }
     }
     FC_AUTORELEASEPOOL_END
-    if (result != 0) {
+        if (result != 0) {
         path[0] = 0;
     }
     return result;
-#elif defined(PLATFORM_ANDROID)
-    path[0] = 0;
-    return 0;
 #else
 #error Unsupported platform
 #endif
 }
 
-int mutton_get_datadir(const char *app_id, char *path, size_t path_max) {
+int app_get_datadir(const char *app_id, char *path, size_t path_max) {
 #if defined(PLATFORM_WINDOWS)
     wchar_t *wpath = NULL;
     size_t count = 0; // Output count including NULL
@@ -122,42 +147,22 @@ int mutton_get_datadir(const char *app_id, char *path, size_t path_max) {
         }
     }
     return 0;
-#elif defined(PLATFORM_ANDROID)
-    (void)app_id;
-    ANativeActivity *activity = FILE_COMPAT_ANDROID_ACTIVITY;
-    if (!activity || !activity->internalDataPath) {
-        path[0] = 0;
-        return -1;
-    }
-    size_t length = strlen(activity->internalDataPath);
-    if (length < path_max - 1) {
-        strcpy(path, activity->internalDataPath);
-        // Add trailing slash
-        if (path[length - 1] != FC_DIRECTORY_SEPARATOR) {
-            path[length] = FC_DIRECTORY_SEPARATOR;
-            path[length + 1] = 0;
-        }
-        return 0;
-    } else {
-        path[0] = 0;
-        return -1;
-    }
 #elif defined(PLATFORM_APPLE)
     int result = -1;
     const NSUInteger NSApplicationSupportDirectory = 14;
     const NSUInteger NSUserDomainMask = 1;
-
+    
 #if TARGET_OS_OSX
     CFBundleRef bundle = NULL;
     int bundle_id_appended = 0;
 #endif
-
+    
     CFStringRef dir = NULL;
     Boolean success = NO;
     unsigned long length = 0;
-
+    
     FC_AUTORELEASEPOOL_BEGIN
-    CFArrayRef array =
+        CFArrayRef array =
 #if __has_feature(objc_arc)
     (__bridge CFArrayRef)
 #else
@@ -238,19 +243,19 @@ int mutton_get_datadir(const char *app_id, char *path, size_t path_max) {
 #else
     (void)app_id;
 #endif
-
-fc_datadir_fail:
+    
+    fc_datadir_fail:
     if (result != 0) {
         path[0] = 0;
     }
     FC_AUTORELEASEPOOL_END
-    return result;
+        return result;
 #else
 #error Unsupported platform
 #endif
 }
 
-int mutton_get_locale(char *locale, size_t locale_max) {
+int app_get_locale(char *locale, size_t locale_max) {
     if (!locale || locale_max < 3) {
         return -1;
     }
@@ -273,7 +278,7 @@ int mutton_get_locale(char *locale, size_t locale_max) {
     }
 #elif defined(PLATFORM_APPLE)
     FC_AUTORELEASEPOOL_BEGIN
-    CFArrayRef languages = CFLocaleCopyPreferredLanguages();
+        CFArrayRef languages = CFLocaleCopyPreferredLanguages();
     if (languages) {
         if (CFArrayGetCount(languages) > 0) {
             CFStringRef language = (CFStringRef)CFArrayGetValueAtIndex(languages, 0);
@@ -292,49 +297,6 @@ int mutton_get_locale(char *locale, size_t locale_max) {
         CFRelease(languages);
     }
     FC_AUTORELEASEPOOL_END
-#elif defined(PLATFORM_ANDROID)
-    ANativeActivity *activity = FILE_COMPAT_ANDROID_ACTIVITY;
-    if (activity) {
-        // getResources().getConfiguration().locale.toString()
-        JNIEnv *jniEnv = _fc_jnienv(activity->vm);
-        if ((*jniEnv)->ExceptionCheck(jniEnv)) {
-            (*jniEnv)->ExceptionClear(jniEnv);
-        }
-
-        if ((*jniEnv)->PushLocalFrame(jniEnv, 16) == JNI_OK) {
-            jclass activityClass = (*jniEnv)->GetObjectClass(jniEnv, activity->clazz);
-            jmethodID getResourcesMethod = (*jniEnv)->GetMethodID(jniEnv, activityClass,
-                "getResources", "()Landroid/content/res/Resources;");
-            jobject resources = (*jniEnv)->CallObjectMethod(jniEnv, activity->clazz,
-                getResourcesMethod);
-            jclass resourcesClass = (*jniEnv)->GetObjectClass(jniEnv, resources);
-            jmethodID getConfigurationMethod = (*jniEnv)->GetMethodID(jniEnv, resourcesClass,
-                "getConfiguration", "()Landroid/content/res/Configuration;");
-            jobject configuration = (*jniEnv)->CallObjectMethod(jniEnv, resources,
-                getConfigurationMethod);
-            jclass configurationClass = (*jniEnv)->GetObjectClass(jniEnv, configuration);
-            jfieldID localeField = (*jniEnv)->GetFieldID(jniEnv, configurationClass, "locale",
-                "Ljava/util/Locale;");
-            jobject localeObject = (*jniEnv)->GetObjectField(jniEnv, configuration, localeField);
-            jclass localeClass = (*jniEnv)->GetObjectClass(jniEnv, localeObject);
-            jmethodID toStringMethod = (*jniEnv)->GetMethodID(jniEnv, localeClass, "toString",
-                "()Ljava/lang/String;");
-            jstring valueString = (*jniEnv)->CallObjectMethod(jniEnv, localeObject, toStringMethod);
-
-            const char *nativeString = (*jniEnv)->GetStringUTFChars(jniEnv, valueString, 0);
-            if (nativeString) {
-                result = 0;
-                strncpy(locale, nativeString, locale_max);
-                locale[locale_max - 1] = 0;
-                (*jniEnv)->ReleaseStringUTFChars(jniEnv, valueString, nativeString);
-            }
-            if ((*jniEnv)->ExceptionCheck(jniEnv)) {
-                (*jniEnv)->ExceptionClear(jniEnv);
-            }
-            (*jniEnv)->PopLocalFrame(jniEnv, NULL);
-        }
-    }
-
 #else
 #error Unsupported platform
 #endif
@@ -356,160 +318,3 @@ int mutton_get_locale(char *locale, size_t locale_max) {
     }
     return result;
 }
-
-
-/* 
-    ## Redefined Functions (Windows, Android):
-
-    | Function            | Windows                      | Android
-    |---------------------|------------------------------|-----------------------------------------
-    | `printf`            | Uses `OutputDebugString`*    | Uses `__android_log_print`
-    | `fopen`             | Uses `fopen_s`               | Uses `AAssetManager_open` if read mode
-    | `fclose`            | Adds `NULL` check            | No change
-*/
-
-/* MARK: Windows */
-
-#if defined(PLATFORM_WINDOWS)
-
-static inline FILE *_fc_windows_fopen(const char *filename, const char *mode) {
-    FILE *file = NULL;
-    fopen_s(&file, filename, mode);
-    return file;
-}
-
-static inline int _fc_windows_fclose(FILE *stream) {
-    // The Windows fclose() function will crash if stream is NULL
-    if (stream) {
-        return fclose(stream);
-    } else {
-        return 0;
-    }
-}
-
-#define fopen(filename, mode) _fc_windows_fopen(filename, mode)
-#define fclose(file) _fc_windows_fclose(file)
-
-#if defined(_DEBUG)
-
-// Outputs to debug window if there is no console and IsDebuggerPresent() returns true.
-static int _fc_printf(const char *format, ...) {
-    int result;
-    if (IsDebuggerPresent() && GetStdHandle(STD_OUTPUT_HANDLE) == NULL) {
-        char buffer[1024];
-        va_list args;
-        va_start(args, format);
-        result = vsprintf_s(buffer, sizeof(buffer), format, args);
-        va_end(args);
-        if (result >= 0) {
-            OutputDebugStringA(buffer);
-        }
-    } else {
-        va_list args;
-        va_start(args, format);
-        result = vprintf(format, args);
-        va_end(args);
-    }
-    return result;
-}
-
-#define printf(format, ...) _fc_printf(format, __VA_ARGS__)
-
-#endif /* _DEBUG */
-
-#endif /* PLATFORM_WINDOWS */
-
-/* MARK: Android */
-
-#if defined(PLATFORM_ANDROID)
-
-#if !defined(_BSD_SOURCE)
-FILE* funopen(const void* __cookie,
-              int (*__read_fn)(void*, char*, int),
-              int (*__write_fn)(void*, const char*, int),
-              fpos_t (*__seek_fn)(void*, fpos_t, int),
-              int (*__close_fn)(void*));
-#endif /* _BSD_SOURCE */
-
-#if !defined(FILE_COMPAT_ANDROID_ACTIVITY)
-#error FILE_COMPAT_ANDROID_ACTIVITY must be defined as a reference to an ANativeActivity (or NULL).
-#endif
-
-static pthread_key_t _fc_jnienv_key;
-static pthread_once_t _fc_jnienv_key_once = PTHREAD_ONCE_INIT;
-
-static void _fc_jnienv_detach(void *value) {
-    if (value) {
-        JavaVM *vm = (JavaVM *)value;
-#ifdef __cplusplus
-        vm->DetachCurrentThread();
-#else
-        (*vm)->DetachCurrentThread(vm);
-#endif
-    }
-}
-
-static void _fc_create_jnienv_key() {
-    pthread_key_create(&_fc_jnienv_key, _fc_jnienv_detach);
-}
-
-static JNIEnv *_fc_jnienv(JavaVM *vm) {
-    JNIEnv *jniEnv = NULL;
-    int setThreadLocal = 0;
-#ifdef __cplusplus
-    setThreadLocal = (vm->GetEnv((void **)&jniEnv, JNI_VERSION_1_4) != JNI_OK &&
-            vm->AttachCurrentThread(&jniEnv, NULL) == JNI_OK);
-#else
-    setThreadLocal =  ((*vm)->GetEnv(vm, (void **)&jniEnv, JNI_VERSION_1_4) != JNI_OK &&
-            (*vm)->AttachCurrentThread(vm, &jniEnv, NULL) == JNI_OK);
-#endif
-    if (setThreadLocal) {
-        pthread_once(&_fc_jnienv_key_once, _fc_create_jnienv_key);
-        pthread_setspecific(_fc_jnienv_key, vm);
-    }
-    return jniEnv;
-}
-
-static int _fc_android_read(void *cookie, char *buf, int size) {
-    return AAsset_read((AAsset *)cookie, buf, (size_t)size);
-}
-
-static int _fc_android_write(void *cookie, const char *buf, int size) {
-    (void)cookie;
-    (void)buf;
-    (void)size;
-    errno = EACCES;
-    return -1;
-}
-
-static fpos_t _fc_android_seek(void *cookie, fpos_t offset, int whence) {
-    return AAsset_seek((AAsset *)cookie, offset, whence);
-}
-
-static int _fc_android_close(void *cookie) {
-    AAsset_close((AAsset *)cookie);
-    return 0;
-}
-
-static FILE *_fc_android_fopen(const char *filename, const char *mode) {
-    ANativeActivity *activity = FILE_COMPAT_ANDROID_ACTIVITY;
-    AAssetManager *assetManager = NULL;
-    AAsset *asset = NULL;
-    if (activity) {
-        assetManager = activity->assetManager;
-    }
-    if (assetManager && mode && mode[0] == 'r') {
-        asset = AAssetManager_open(assetManager, filename, AASSET_MODE_UNKNOWN);
-    }
-    if (asset) {
-        return funopen(asset, _fc_android_read, _fc_android_write, _fc_android_seek,
-                       _fc_android_close);
-    } else {
-        return fopen(filename, mode);
-    }
-}
-
-#define printf(...) __android_log_print(ANDROID_LOG_INFO, "Mutton", __VA_ARGS__)
-#define fopen(filename, mode) _fc_android_fopen(filename, mode)
-
-#endif /* PLATFORM_ANDROID */

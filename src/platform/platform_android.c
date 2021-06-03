@@ -1,5 +1,5 @@
-#include "../mutton.h"
 #include "glfm.h"
+#include "application/app.h"
 
 static bool needs_redraw = true;
 
@@ -12,7 +12,7 @@ static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, i
 static void onSensor(GLFMDisplay *display, GLFMSensorEvent sev);
 
 void glfmMain(GLFMDisplay *display) {
-    app = mutton_main();
+    app = app_main();
 
     glfmSetDisplayConfig(display,
                          GLFMRenderingAPIOpenGLES2,
@@ -35,24 +35,22 @@ void glfmMain(GLFMDisplay *display) {
 
 
 static void onFrame(GLFMDisplay *display) {
-    app_t this_app = mutton_get_app();
 
     if(needs_redraw) {
         needs_redraw = false; 
 
         int width, height;
         glfmGetDisplaySize(display, &width, &height);
-        this_app.window_width = width;
-        this_app.window_height = height;
-        this_app.update();
+        app.window_width = width;
+        app.window_height = height;
+        app.update();
         glfmSwapBuffers(display);
 
     }
 }
 
 static void onSurfaceCreated(GLFMDisplay *display, int width, int height) {
-    app_t this_app = mutton_get_app();
-    this_app.init();
+    app.init();
 
 }
 
@@ -65,21 +63,18 @@ static void onSurfaceDestroyed(GLFMDisplay *display) {
 }
 
 static bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, double x, double y) {
-    app_t this_app = mutton_get_app();
     TouchEvent ev = {.id=touch, .phase=phase, .x=x, .y=y};
-    this_app.event.touch(ev);
+    app.event.touch(ev);
     return true;
 }
 
 static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, int modifiers) {
-    app_t this_app = mutton_get_app();
     KeyEvent ev = {.key=keyCode, .action=action, .mod=modifiers};
-    this_app.event.key(ev);
+    app.event.key(ev);
     return true;
 }
 
 static void onSensor(GLFMDisplay *display, GLFMSensorEvent sev) {
-    app_t this_app = mutton_get_app();
     SensorEvent ev;
     ev.type = sev.sensor;
     ev.timestamp = sev.timestamp;
@@ -99,5 +94,5 @@ static void onSensor(GLFMDisplay *display, GLFMSensorEvent sev) {
         ev.vector.y = sev.vector.y;
         ev.vector.z = sev.vector.z;
     }
-    this_app.event.sensor(ev);
+    app.event.sensor(ev);
 }

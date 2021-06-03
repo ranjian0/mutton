@@ -1,5 +1,5 @@
-#ifndef DESKTOP_INPUT_H
-#define DESKTOP_INPUT_H
+#ifndef INPUT_DESKTOP_H
+#define INPUT_DESKTOP_H
 
 /* Actions */
 #define ACTION_RELEASE                0
@@ -157,4 +157,4 @@
 #define MOUSE_BUTTON_MIDDLE    MOUSE_BUTTON_3
 
 
-#endif // DESKTOP_INPUT_H
+#endif // INPUT_DESKTOP_H

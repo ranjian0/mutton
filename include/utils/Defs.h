@@ -102,4 +102,4 @@ static JNIEnv *_fc_jnienv(JavaVM *vm);
 #endif
 
 
-#endif
+#endif // DEFS_H

@@ -1,6 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "utils/String.h"
+
 
 char* str_slice(char *str, int start_index, int end_index) {
     size_t len = strlen(str);

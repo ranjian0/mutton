@@ -1,4 +1,4 @@
-#include "../mutton.h"
+#include "application/app.h"
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 static void mouse_callback(GLFWwindow *win, int button, int action, int mod);
@@ -8,7 +8,7 @@ static void resize_callback(GLFWwindow *win, int w, int h);
 static void error_callback(int error, const char* description);
 
 int main(int argv, char** argc) {
-    app = mutton_main();
+    app = app_main();
 
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
@@ -59,35 +59,30 @@ int main(int argv, char** argc) {
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    app_t this_app = mutton_get_app();
     KeyEvent ev = {.key=key, .action=action, .mod=mods};
-    this_app.event.key(ev);
+    app.event.key(ev);
      
 }
 
 static void mouse_callback(GLFWwindow *win, int button, int action, int mod) {
-    app_t this_app = mutton_get_app();
     MouseEvent ev = {.button=button, .action=action, .mod=mod};
-    this_app.event.mouse(ev);
+    app.event.mouse(ev);
 
 }
 
 static void scroll_callback(GLFWwindow *win, double dx, double dy) {
-    app_t this_app = mutton_get_app();
     MouseScrollEvent ev = {.dx=dx, .dy=dy};
-    this_app.event.scroll(ev);
+    app.event.scroll(ev);
 }
 
 static void cursorpos_callback(GLFWwindow *win, double xpos, double ypos) {
-    app_t this_app = mutton_get_app();
     MouseMoveEvent ev = {.xpos=xpos, ypos=ypos};
-    this_app.event.move(ev);
+    app.event.move(ev);
 }
 
 static void resize_callback(GLFWwindow *win, int w, int h) {
-    app_t this_app = mutton_get_app();
     ResizeEvent ev = {.width=w, .height=h};
-    this_app.event.resize(ev);
+    app.event.resize(ev);
 }
 
 static void error_callback(int error, const char* description) {
