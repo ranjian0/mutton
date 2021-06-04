@@ -101,5 +101,6 @@ static JNIEnv *_fc_jnienv(JavaVM *vm);
 #  define FC_DIRECTORY_SEPARATOR '/'
 #endif
 
+#define UNUSED(x) (void)(x)
 
 #endif // DEFS_H
