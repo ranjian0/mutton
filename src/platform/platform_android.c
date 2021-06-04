@@ -3,13 +3,13 @@
 
 static bool needs_redraw = true;
 
-static void onFrame(GLFMDisplay *display);
-static void onSurfaceCreated(GLFMDisplay *display, int width, int height);
-static void onSurfaceRefresh(GLFMDisplay *display);
-static void onSurfaceDestroyed(GLFMDisplay *display);
-static bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, double x, double y);
-static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, int modifiers);
-static void onSensor(GLFMDisplay *display, GLFMSensorEvent sev);
+void onFrame(GLFMDisplay *display);
+void onSurfaceCreated(GLFMDisplay *display, int width, int height);
+void onSurfaceRefresh(GLFMDisplay *display);
+void onSurfaceDestroyed(GLFMDisplay *display);
+bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, double x, double y);
+bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, int modifiers);
+void onSensor(GLFMDisplay *display, GLFMSensorEvent sev);
 
 void glfmMain(GLFMDisplay *display) {
     app = app_main();
@@ -34,7 +34,7 @@ void glfmMain(GLFMDisplay *display) {
 }
 
 
-static void onFrame(GLFMDisplay *display) {
+void onFrame(GLFMDisplay *display) {
 
     if(needs_redraw) {
         needs_redraw = false; 
@@ -49,20 +49,20 @@ static void onFrame(GLFMDisplay *display) {
     }
 }
 
-static void onSurfaceCreated(GLFMDisplay *display, int width, int height) {
+void onSurfaceCreated(GLFMDisplay *display, int width, int height) {
     if(app.init) app.init();
 
 }
 
-static void onSurfaceRefresh(GLFMDisplay *display) {
+void onSurfaceRefresh(GLFMDisplay *display) {
     needs_redraw = true;
 }
 
-static void onSurfaceDestroyed(GLFMDisplay *display) {
+void onSurfaceDestroyed(GLFMDisplay *display) {
     if(app.shutdown) app.shutdown();
 }
 
-static bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, double x, double y) {
+bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, double x, double y) {
     if(app.event.touch) {
         TouchEvent ev = {.id=touch, .phase=phase, .x=x, .y=y};
         app.event.touch(ev);
@@ -70,7 +70,7 @@ static bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, doubl
     return true;
 }
 
-static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, int modifiers) {
+bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, int modifiers) {
     if(app.event.key) {
         KeyEvent ev = {.key=keyCode, .action=action, .mod=modifiers};
         app.event.key(ev);
@@ -78,7 +78,7 @@ static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, i
     return true;
 }
 
-static void onSensor(GLFMDisplay *display, GLFMSensorEvent sev) {
+void onSensor(GLFMDisplay *display, GLFMSensorEvent sev) {
     if(app.event.sensor) {
         SensorEvent ev;
         ev.type = sev.sensor;

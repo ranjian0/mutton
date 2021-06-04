@@ -1,11 +1,11 @@
 #include "application/app.h"
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-static void mouse_callback(GLFWwindow *win, int button, int action, int mod);
-static void scroll_callback(GLFWwindow *win, double dx, double dy);
-static void cursorpos_callback(GLFWwindow *win, double xpos, double ypos);
-static void resize_callback(GLFWwindow *win, int w, int h);
-static void error_callback(int error, const char* description);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouse_callback(GLFWwindow *win, int button, int action, int mod);
+void scroll_callback(GLFWwindow *win, double dx, double dy);
+void cursorpos_callback(GLFWwindow *win, double xpos, double ypos);
+void resize_callback(GLFWwindow *win, int w, int h);
+void error_callback(int error, const char* description);
 
 int main(int argv, char** argc) {
     app = app_main();
@@ -76,14 +76,12 @@ void mouse_callback(GLFWwindow *win, int button, int action, int mod) {
 
 void scroll_callback(GLFWwindow *win, double dx, double dy) {
     if(app.event.scroll) {
-        app_print("%f, %f\n", dx, dy);
         MouseScrollEvent ev = {.dx=dx, .dy=dy};
         app.event.scroll(ev);
     }
 }
 
 void cursorpos_callback(GLFWwindow *win, double px, double py) {
-    app_print("%f, %f\n", px, py);
     if(app.event.move) {
         MouseMoveEvent ev = {.xpos=px, .ypos=py};
         app.event.move(ev);
