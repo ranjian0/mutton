@@ -190,10 +190,10 @@ if(BUILD_ANDROID)
     set(NDK_LOCATIONS 
             $ENV{ANDROID_NDK}
             $ENV{ANDROID_NDK_HOME}
+            ${ANDROIDSDK}/ndk-bundle
     )
     FILE(GLOB ndk_a ABSOLUTE ${ANDROIDSDK}/ndk/*)
-    FILE(GLOB ndk_b ABSOLUTE ${ANDROIDSDK}/ndk-bundle/*)
-    list(APPEND NDK_LOCATIONS ${ndk_a} ${ndk_b})
+    list(APPEND NDK_LOCATIONS ${ndk_a})
     list(REVERSE NDK_LOCATIONS) # if there are multiple versions, use latest
 
     foreach(ndk_dir IN LISTS NDK_LOCATIONS)
@@ -310,7 +310,7 @@ function(print_env)
     execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")  
 endfunction()
 
-print_variables()
+# print_variables()
 
 # add_compile_options(
 #   "-Wall" "-Wpedantic" "-Wextra" "-fexceptions"
