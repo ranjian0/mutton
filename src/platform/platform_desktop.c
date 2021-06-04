@@ -37,7 +37,7 @@ int main(int argv, char** argc) {
     gladLoadGL(glfwGetProcAddress);
     glfwSwapInterval(1);
 
-    app.init();
+    if(app.init) app.init();
     while(!glfwWindowShouldClose(window)) {
 
         int width, height;
@@ -46,46 +46,58 @@ int main(int argv, char** argc) {
         app.window_height = height;
         glViewport(0, 0, width, height);
 
-        app.update();
+        if(app.update) app.update();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    app.shutdown();
+    if(app.shutdown) app.shutdown();
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    KeyEvent ev = {.key=key, .action=action, .mod=mods};
-    app.event.key(ev);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if(app.event.key) {
+        KeyEvent ev = {.key=key, .action=action, .mod=mods};
+        app.event.key(ev);
+    }
      
 }
 
-static void mouse_callback(GLFWwindow *win, int button, int action, int mod) {
-    MouseEvent ev = {.button=button, .action=action, .mod=mod};
-    app.event.mouse(ev);
+void mouse_callback(GLFWwindow *win, int button, int action, int mod) {
+    if(app.event.mouse) {
+        MouseEvent ev = {.button=button, .action=action, .mod=mod};
+        app.event.mouse(ev);
+    }
 
 }
 
-static void scroll_callback(GLFWwindow *win, double dx, double dy) {
-    MouseScrollEvent ev = {.dx=dx, .dy=dy};
-    app.event.scroll(ev);
+void scroll_callback(GLFWwindow *win, double dx, double dy) {
+    if(app.event.scroll) {
+        app_print("%f, %f\n", dx, dy);
+        MouseScrollEvent ev = {.dx=dx, .dy=dy};
+        app.event.scroll(ev);
+    }
 }
 
-static void cursorpos_callback(GLFWwindow *win, double xpos, double ypos) {
-    MouseMoveEvent ev = {.xpos=xpos, ypos=ypos};
-    app.event.move(ev);
+void cursorpos_callback(GLFWwindow *win, double px, double py) {
+    app_print("%f, %f\n", px, py);
+    if(app.event.move) {
+        MouseMoveEvent ev = {.xpos=px, .ypos=py};
+        app.event.move(ev);
+    }
 }
 
-static void resize_callback(GLFWwindow *win, int w, int h) {
-    ResizeEvent ev = {.width=w, .height=h};
-    app.event.resize(ev);
+void resize_callback(GLFWwindow *win, int w, int h) {
+    if(app.event.resize) {
+        ResizeEvent ev = {.width=w, .height=h};
+        app.event.resize(ev);
+    }
 }
 
-static void error_callback(int error, const char* description) {
+void error_callback(int error, const char* description) {
     fprintf(stderr, "Error: %s\n", description);
 }
 

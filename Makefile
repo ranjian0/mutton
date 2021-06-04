@@ -1,7 +1,7 @@
 ROOT_DIR=$(abspath .)
 include makefiles/Lib.mk
 
-all: lib examples
+all: lib #examples
 
 examples:
 	@$(MAKE) -C $@
@@ -10,7 +10,7 @@ lib_desktop: build_desktop
 
 lib_android: build_android
 
-lib: lib_android lib_desktop
+lib: lib_desktop lib_android 
 
 .PHONY: examples
 

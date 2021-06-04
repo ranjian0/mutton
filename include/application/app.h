@@ -21,15 +21,7 @@ typedef struct app_t
 } app_t;
 
 // Global App object
-static void void_func() {}
-static app_t app = {
-    .init = void_func,
-    .update = void_func,
-    .shutdown = void_func,
-    .window_title = "App",
-    .window_width = 800,
-    .window_height = 600,
-};
+extern app_t app;
 
 /*
  * Entry point function for all applications. 
@@ -56,22 +48,26 @@ static app_t app = {
  *      }
  * }
  */
-app_t app_main();
+extern app_t app_main();
 
+static void set_app(app_t _app) { app = _app; }
 static app_t get_app() { return app; }
+static int app_get_width() { return app.window_width; }
+static int app_get_height() { return app.window_height; }
+static void* app_get_userdata() { return app.user_data; }
 
-int app_get_width() { return app.window_width; }
-int app_get_height() { return app.window_height; }
-void* app_get_userdata() { return app.user_data; }
+static double app_get_time() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec*1000. + tv.tv_usec/1000.;
+}
 
-double app_get_time();
-int app_file_close(FILE *f);
-FILE* app_file_open(const char *filename, const char *mode);
-void app_print(const char* fmt_string, ...);
+extern int app_file_close(FILE *f);
+extern FILE* app_file_open(const char *filename, const char *mode);
+extern void app_print(const char* fmt_string, ...);
 
-int app_get_resdir(char *path, size_t path_max);
-int app_get_locale(char *locale, size_t locale_max);
-int app_get_datadir(const char *app_id, char *path, size_t path_max);
-
+extern int app_get_resdir(char *path, size_t path_max);
+extern int app_get_locale(char *locale, size_t locale_max);
+extern int app_get_datadir(const char *app_id, char *path, size_t path_max);
 
 #endif // APP_H

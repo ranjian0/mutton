@@ -70,19 +70,18 @@ void my_init() {
     glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
                           sizeof(Vertex), (void*) offsetof(Vertex, col));
 
-    printf("%f\n", mutton_get_time());
+    app_print("%f\n", app_get_time());
     char resdir[1024];
-    mutton_get_resdir(resdir, 1024);
-    printf("%s\n", resdir);
+    app_get_resdir(resdir, 1024);
+    app_print("ResDir: %s\n", resdir);
 
     char locale[1024];
-    mutton_get_locale(locale, 1024);
-    printf("%s\n", locale);
+    app_get_locale(locale, 1024);
+    app_print("Locale: %s\n", locale);
 
     char datadir[1024];
-    mutton_get_datadir("DeskApp", datadir, 1024);
-    printf("%s\n", datadir);
-
+    app_get_datadir("DeskApp", datadir, 1024);
+    app_print("Datadir: %s\n", datadir);
 
 }
 
@@ -102,31 +101,35 @@ void my_shutdown() {
 
 void on_key(KeyEvent ev) {
     if (ev.key == KEY_ESCAPE) {
-        printf("Key pressed space\n");
+        app_print("Key pressed space\n");
     }
     if(ev.action == ACTION_REPEAT) {
-        printf("key repeating..\n");
+        app_print("key repeating..\n");
     }
 }
 
 void on_mouse(MouseEvent ev) {
     if(ev.button == MOUSE_BUTTON_LEFT) {
-        printf("mouse pressed left\n");
+        app_print("mouse pressed left\n");
     }
     if(ev.action == ACTION_RELEASE) {
-        printf("button released..\n");
+        app_print("button released..\n");
     }
 }
 
 void on_scroll(MouseScrollEvent ev) {
-    printf("Mouse Scrolled (%f, %f)\n", ev.dx, ev.dy);
+    app_print("Mouse Scrolled (%f, %f)\n", ev.dx, ev.dy);
 }
 
 void on_move(MouseMoveEvent ev) {
-    printf("Mouse move (%f, %f)\n", ev.xpos, ev.ypos);
+    // app_print("Mouse move (%f, %f)\n", ev.xpos, ev.ypos);
 }
 
-app_t mutton_main() {
+void on_touch(TouchEvent ev) {
+    // app_print("Touch event at (%f, %f)\n", ev.x, ev.y);
+}
+
+app_t app_main() {
     return (app_t){
         .window_title = "Triangle",
         .window_width = 800,
@@ -137,6 +140,7 @@ app_t mutton_main() {
         .event.key = on_key,
         .event.mouse = on_mouse,
         .event.scroll = on_scroll,
-        .event.move = on_move
+        .event.move = on_move,
+        .event.touch = on_touch
     };
 }

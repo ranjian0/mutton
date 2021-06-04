@@ -22,6 +22,8 @@ LABEL?=$(APPNAME)
 APKFILE ?= $(APPNAME).apk
 PACKAGENAME?=com.example.$(APPNAME)
 ANDROID_FULLSCREEN?=y
+ANDROID_ASSETS_DIR?=assets
+ANDROID_RESOURCE_DIR?=res
 
 # Android Cflags
 ANDROID_CFLAGS?=-Wall #-ffunction-sections -fdata-sections -fvisibility=hidden
@@ -110,9 +112,9 @@ build/apk/lib/x86_64/lib$(APPNAME).so : $(ANDROIDSRCS)
 
 apk : $(ANDROID_TARGETS) AndroidManifest.xml keystore
 	mkdir -p build/apk/assets
-	cp -r src/assets/* build/apk/assets
+	cp -r $(ANDROID_ASSETS_DIR)/* build/apk/assets
 	rm -rf build/temp.apk
-	$(AAPT) package -f -F build/temp.apk -I $(ANDROIDSDK)/platforms/android-$(ANDROIDVERSION)/android.jar -M build/apk/AndroidManifest.xml -S src/res -A build/apk/assets -v --target-sdk-version $(ANDROIDTARGET)
+	$(AAPT) package -f -F build/temp.apk -I $(ANDROIDSDK)/platforms/android-$(ANDROIDVERSION)/android.jar -M build/apk/AndroidManifest.xml -S $(ANDROID_RESOURCE_DIR) -A build/apk/assets -v --target-sdk-version $(ANDROIDTARGET)
 	unzip -o build/temp.apk -d build/apk
 	rm -rf build/apk.apk
 	cd build/apk && zip -D9r ../apk.apk . && zip -D0r ../apk.apk ./resources.arsc ./AndroidManifest.xml
