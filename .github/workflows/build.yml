@@ -16,9 +16,10 @@ jobs:
       with:
         ndk-version: r21e
 
-    # - name: Install tools
-    #   run: |
-    #     apt install make build-essential
+    - name: Install tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install make build-essential
 
     - name: Build
       run: |
