@@ -20,7 +20,7 @@ endif
 
 ifeq ($(UNAME), Darwin)
 GLFW_CFLAGS= -D_GLFW_COCOA
-GLFW_LDFLAGS:= framework Cocoa -framework IOKit -framework CoreFoundation 
+GLFW_LDFLAGS:= -framework Cocoa -framework IOKit -framework CoreFoundation 
 GLFW_SRCS+= $(GLFW_COCOA_SRCS)
 endif
 
