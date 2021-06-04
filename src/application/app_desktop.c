@@ -18,15 +18,6 @@ FILE* app_file_open(const char *filename, const char *mode) {
 #endif
 }
 
-void app_print(const char* fmt, ...) {
-    va_list args;
-    va_start(args, fmt);
-    printf(fmt, args);
-    va_end(args);        
-
-}
-
-
 int app_get_resdir(char *path, size_t path_max) {
     if (!path || path_max == 0) {
         return -1;

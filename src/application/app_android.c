@@ -21,15 +21,6 @@ int app_file_close(FILE *f) {
     return fclose(f);
 }
 
-void app_print(const char* fmt, ...) {
-    va_list args;
-    va_start(args, fmt);
-    __android_log_print(ANDROID_LOG_INFO, app.window_title, fmt, args);
-    va_end(args);    
-}
-
-
-
 int app_get_resdir(char *path, size_t path_max) {
     if (!path || path_max == 0) {
         return -1;
