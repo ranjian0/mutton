@@ -19,4 +19,8 @@ clean:
 	@$(MAKE) -C examples clean
 
 clean_objs:
-	find build -type f -name '*.o' -delete
+	find build -type f -name '*.o' -delete 
+
+copy_include:
+	@mkdir -p build/include
+	cp -r include/* build/include/

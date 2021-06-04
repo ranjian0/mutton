@@ -20,11 +20,10 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install make build-essential xorg-dev 
-# libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev
  
     - name: Build
       run: |
-        make && make clean_objs
+        make && make clean_objs && make copy_include
 
     - uses: actions/upload-artifact@v2
       with:
