@@ -1,11 +1,18 @@
-SUBDIRS = lib examples
+ROOT_DIR=$(abspath .)
+include makefiles/Lib.mk
 
-all: $(SUBDIRS)
+all: lib examples
 
-$(SUBDIRS):
+examples:
 	@$(MAKE) -C $@
 
-.PHONY: $(SUBDIRS)
+lib_desktop: build_desktop 
+
+lib_android: build_android
+
+lib: lib_android lib_desktop
+
+.PHONY: examples
 
 clean:
 	@rm -rf build

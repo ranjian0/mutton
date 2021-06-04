@@ -29,7 +29,7 @@ ANDROID_CFLAGS+=-Os -DANDROID -DAPPNAME=\"$(APPNAME)\"
 ifeq (ANDROID_FULLSCREEN,y)
 ANDROID_CFLAGS +=-DANDROID_FULLSCREEN
 endif
-ANDROID_CFLAGS+= -I$(LIB_DIR)/extern/freetype/include -I$(LIB_DIR)/extern/glfm/include -I$(LIB_DIR)/intern -I$(NDK)/sources/android/native_app_glue -I$(NDK)/toolchains/llvm/prebuilt/$(OS_NAME)/sysroot/usr/include -I$(NDK)/toolchains/llvm/prebuilt/$(OS_NAME)/sysroot/usr/include/android  -fPIC -DANDROIDVERSION=$(ANDROIDVERSION)
+ANDROID_CFLAGS+= -I$(ROOT_DIR)/extern/freetype/include -I$(ROOT_DIR)/extern/glfm/include -I$(ROOT_DIR)/include -I$(NDK)/sources/android/native_app_glue -I$(NDK)/toolchains/llvm/prebuilt/$(OS_NAME)/sysroot/usr/include -I$(NDK)/toolchains/llvm/prebuilt/$(OS_NAME)/sysroot/usr/include/android  -fPIC -DANDROIDVERSION=$(ANDROIDVERSION)
 
 
 # Android ldflags

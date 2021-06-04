@@ -5,5 +5,5 @@
 #elif defined(PLATFORM_WINDOWS) || defined(PLATFORM_APPLE) || defined(PLATFORM_LINUX)
 #   include "platform_desktop.c"
 #else
-#error unsupported platform
+#error Unsupported Platform
 #endif
