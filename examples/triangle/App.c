@@ -122,11 +122,11 @@ void on_scroll(MouseScrollEvent ev) {
 }
 
 void on_move(MouseMoveEvent ev) {
-    // app_print("Mouse move (%f, %f)\n", ev.xpos, ev.ypos);
+    app_print("Mouse move (%f, %f)\n", ev.xpos, ev.ypos);
 }
 
 void on_touch(TouchEvent ev) {
-    // app_print("Touch event at (%f, %f)\n", ev.x, ev.y);
+    app_print("Touch event at (%f, %f)\n", ev.x, ev.y);
 }
 
 app_t app_main() {
