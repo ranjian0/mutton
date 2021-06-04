@@ -18,4 +18,5 @@ clean:
 	@rm -rf build
 	@$(MAKE) -C examples clean
 
-	
+clean_objs:
+	find build -type f -name '*.o' -delete
