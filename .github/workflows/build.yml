@@ -19,11 +19,14 @@ jobs:
     - name: Install tools
       run: |
         sudo apt-get update
-        sudo apt-get install make build-essential xorg-dev 
+        sudo apt-get install make build-essential xorg-dev cmake
  
     - name: Build
       run: |
-        make && make clean_objs && make copy_include
+        cmake -S . -B desktopbuild -DBUILD_DESKTOP=ON &&
+        cmake --build desktopbuild &&
+        cmake -S . -B androidbuild -DBUILD_ANDROID=ON &&
+        cmake --build androidbuild
 
     - uses: actions/upload-artifact@v2
       with:
