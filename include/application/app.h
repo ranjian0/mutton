@@ -50,24 +50,29 @@ extern app_t app;
  */
 extern app_t app_main();
 
-static void set_app(app_t _app) { app = _app; }
-static app_t get_app() { return app; }
-static int app_get_width() { return app.window_width; }
-static int app_get_height() { return app.window_height; }
-static void* app_get_userdata() { return app.user_data; }
+app_t get_app();
+void set_app(app_t _app);
 
-static double app_get_time() {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return tv.tv_sec*1000. + tv.tv_usec/1000.;
-}
+int app_get_width();
+int app_get_height();
 
-extern int app_file_close(FILE *f);
-extern FILE* app_file_open(const char *filename, const char *mode);
-extern void app_print(const char* fmt_string, ...);
+double app_get_time();
+void* app_get_userdata();
 
-extern int app_get_resdir(char *path, size_t path_max);
-extern int app_get_locale(char *locale, size_t locale_max);
-extern int app_get_datadir(const char *app_id, char *path, size_t path_max);
+int app_file_close(FILE *f);
+FILE* app_file_open(const char *filename, const char *mode);
+
+int app_get_resdir(char *path, size_t path_max);
+int app_get_locale(char *locale, size_t locale_max);
+int app_get_datadir(const char *app_id, char *path, size_t path_max);
+
+#if defined(PLATFORM_ANDROID)
+#define app_print(...) __android_log_print(ANDROID_LOG_INFO, app.window_title, __VA_ARGS__)
+#elif defined(PLATFORM_WINDOWS) || defined(PLATFORM_APPLE) || defined(PLATFORM_LINUX)
+#define app_print(...) printf(__VA_ARGS__)
+#else
+#define app_print(...)
+#endif
+
 
 #endif // APP_H

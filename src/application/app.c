@@ -27,6 +27,21 @@ app_t app = {
     .event.sensor = no_sensor,        
 };
 
+void set_app(app_t _app) { app = _app; }
+
+app_t get_app() { return app; }
+
+int app_get_width() { return app.window_width; }
+
+int app_get_height() { return app.window_height; }
+
+void* app_get_userdata() { return app.user_data; }
+
+double app_get_time() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec*1000. + tv.tv_usec/1000.;
+}
 
 #if defined(PLATFORM_ANDROID)
 #include "app_android.c"
