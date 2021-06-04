@@ -141,7 +141,7 @@ set(MUTTON_SRCS
 # BUILD THE STATIC LIBRARY FOR DESKTOP
 # ------------------------------------
 if(BUILD_DESKTOP)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/${OS_NAME})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib/${OS_NAME})
 
     set(CMAKE_C_FLAGS "-DFT2_BUILD_LIBRARY=1 ${GLFW_CFLAGS}")
     add_library(MuttonDesktop STATIC 
@@ -233,7 +233,7 @@ if(BUILD_ANDROID)
     set(ANDROID_CFLAGS_x86_64 -DANDROID_ABI=x86_64 -march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel)
 
 
-    set(ANDROID_TARGETS ARM64;ARM32;x86;x86_64)
+    set(ANDROID_TARGETS arm64-v8a;armeabi-v7a;x86;x86_64)
 
 
     set(ANDROID_COMPILERS 
@@ -268,7 +268,7 @@ if(BUILD_ANDROID)
         set(CMAKE_C_COMPILER ${compiler})
         set(CMAKE_C_COMPILER_AR ${ar})
         set(CMAKE_C_FLAGS "-DANDROIDVERSION=${ANDROIDVERSION} -DFT2_BUILD_LIBRARY=1 ${cflags}")
-        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/android/${target})
+        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib/android/${target})
         add_library(MuttonMobile${target} STATIC
                                     ${NDK}/sources/android/native_app_glue/android_native_app_glue.c
                                     ${FREETYPE_SRCS}
@@ -286,10 +286,11 @@ if(BUILD_ANDROID)
                                     ${NDK}/toolchains/llvm/prebuilt/${OS_NAME}/sysroot/usr/include/android 
         )
 
+        set(trg MuttonMobile${target})
         ADD_CUSTOM_COMMAND(TARGET MuttonMobile${target} POST_BUILD
                             COMMAND ${CMAKE_COMMAND} -E rename
-                            ${CMAKE_BINARY_DIR}/lib/android/${target}/libMuttonMobile${target}.a
-                            ${CMAKE_BINARY_DIR}/lib/android/${target}/libMuttonMobile.a
+                            $<TARGET_FILE:${trg}>
+                            $<TARGET_FILE_DIR:${trg}>/$<TARGET_FILE_PREFIX:${trg}>MuttonMobile$<TARGET_FILE_SUFFIX:${trg}>
                             COMMENT "Renaming 'MuttonMobile${target}' to 'MuttonMobile'"
         )
 
@@ -309,7 +310,7 @@ function(print_env)
     execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")  
 endfunction()
 
-
+print_variables()
 
 # add_compile_options(
 #   "-Wall" "-Wpedantic" "-Wextra" "-fexceptions"
