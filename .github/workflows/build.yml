@@ -19,22 +19,22 @@ jobs:
             cxx: "g++",
             generators: "Ninja"
           }
-        - {
-            name: "Ubuntu_Latest_GCC",
-            os: ubuntu-latest,
-            build_type: "Release",
-            cc: "gcc",
-            cxx: "g++",
-            generators: "Ninja"
-          }
-        - {
-            name: "macOS Latest Clang",
-            os: macos-latest,
-            build_type: "Release",
-            cc: "clang",
-            cxx: "clang++",
-            generators: "Ninja"
-          }
+        # - {
+        #     name: "Ubuntu_Latest_GCC",
+        #     os: ubuntu-latest,
+        #     build_type: "Release",
+        #     cc: "gcc",
+        #     cxx: "g++",
+        #     generators: "Ninja"
+        #   }
+        # - {
+        #     name: "macOS Latest Clang",
+        #     os: macos-latest,
+        #     build_type: "Release",
+        #     cc: "clang",
+        #     cxx: "clang++",
+        #     generators: "Ninja"
+        #   }
 
     steps:
     - uses: actions/checkout@v1

@@ -193,6 +193,12 @@ if(BUILD_ANDROID)
         message(STATUS "Android SDK found at ${ANDROIDSDK}")
     endif()
 
+    if(WIN32)
+        # -- fix windows paths
+        file(TO_CMAKE_PATH ${ANDROIDSDK} sdk)
+        set(ANDROIDSDK ${sdk})
+    endif()
+
     # -- find the android NDK
     set(NDK_LOCATIONS 
             $ENV{ANDROID_NDK}
@@ -215,6 +221,13 @@ if(BUILD_ANDROID)
     else()
         message(STATUS "Android NDK found at ${NDK}")
     endif()
+
+    if(WIN32)
+        # -- fix windows paths
+        file(TO_CMAKE_PATH ${NDK} ndk)
+        set(ANDROIDNDK ${ndk})
+    endif()
+
 
     # -- get the latest android build tools
     FILE(GLOB BUILD_TOOL_LOCATIONS ABSOLUTE ${ANDROIDSDK}/build-tools/*)
