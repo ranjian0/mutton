@@ -2,8 +2,6 @@
 #define APP_H
 
 #include <time.h>
-#include <sys/time.h>
-
 #include "event.h"
 #include "utils/Defs.h"
 
