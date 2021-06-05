@@ -278,8 +278,10 @@ if(BUILD_ANDROID)
     )
 
     # -- build mobile lib for each android target
-    # foreach(option IN ZIP_LISTS ANDROID_COMPILERS ANDROID_AR ANDROID_CFLAGS ANDROID_TARGETS)
-    foreach(index RANGE 0 3)
+    list(LENGTH ANDROID_TARGETS num_targets)
+    math(EXPR len_targets "${num_targets} - 1")
+
+    foreach(index RANGE ${len_targets})
         list(GET ANDROID_TARGETS ${index} target)
         list(GET ANDROID_COMPILERS ${index} compiler)
         list(GET ANDROID_AR ${index} ar)
