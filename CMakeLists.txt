@@ -330,7 +330,7 @@ function(print_env)
     execute_process(COMMAND "${CMAKE_COMMAND}" "-E" "environment")  
 endfunction()
 
-# print_variables()
+print_variables()
 
 # add_compile_options(
 #   "-Wall" "-Wpedantic" "-Wextra" "-fexceptions"

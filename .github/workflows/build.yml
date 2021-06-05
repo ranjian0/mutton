@@ -65,10 +65,10 @@ jobs:
         ninja --version
         cmake --version
  
-    - name: Build Desktop
-      run: |
-        cmake -S . -B desktopbuild -DBUILD_DESKTOP=ON -DCMAKE_BUILD_TYPE=Release
-        cmake --build desktopbuild
+    # - name: Build Desktop
+    #   run: |
+    #     cmake -S . -B desktopbuild -DBUILD_DESKTOP=ON -DCMAKE_BUILD_TYPE=Release
+    #     cmake --build desktopbuild
 
     - name: Build Android
       run: |
