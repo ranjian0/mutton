@@ -287,8 +287,8 @@ if(BUILD_ANDROID)
         
         set(CMAKE_C_COMPILER ${compiler})
         set(CMAKE_C_COMPILER_AR ${ar})
-        set(CMAKE_C_FLAGS "-DANDROIDVERSION=${ANDROIDVERSION} -DFT2_BUILD_LIBRARY=1 ${cflags}")
-        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib/${OS_NAME}/android/${target})
+        set(CMAKE_C_FLAGS "-fPIC -DANDROIDVERSION=${ANDROIDVERSION} -DFT2_BUILD_LIBRARY=1 ${cflags}")
+        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib/android/${target})
         add_library(MuttonMobile${target} STATIC
                                     ${NDK}/sources/android/native_app_glue/android_native_app_glue.c
                                     ${FREETYPE_SRCS}

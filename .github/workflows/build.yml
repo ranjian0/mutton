@@ -19,22 +19,22 @@ jobs:
             cxx: "g++",
             generators: "Ninja"
           }
-        # - {
-        #     name: "Ubuntu_Latest_GCC",
-        #     os: ubuntu-latest,
-        #     build_type: "Release",
-        #     cc: "gcc",
-        #     cxx: "g++",
-        #     generators: "Ninja"
-        #   }
-        # - {
-        #     name: "macOS Latest Clang",
-        #     os: macos-latest,
-        #     build_type: "Release",
-        #     cc: "clang",
-        #     cxx: "clang++",
-        #     generators: "Ninja"
-        #   }
+        - {
+            name: "Ubuntu_Latest_GCC",
+            os: ubuntu-latest,
+            build_type: "Release",
+            cc: "gcc",
+            cxx: "g++",
+            generators: "Ninja"
+          }
+        - {
+            name: "macOS Latest Clang",
+            os: macos-latest,
+            build_type: "Release",
+            cc: "clang",
+            cxx: "clang++",
+            generators: "Ninja"
+          }
 
     steps:
     - uses: actions/checkout@v1
@@ -65,15 +65,16 @@ jobs:
         ninja --version
         cmake --version
  
-    # - name: Build Desktop
-    #   run: |
-    #     cmake -S . -B desktopbuild -DBUILD_DESKTOP=ON -DCMAKE_BUILD_TYPE=Release
-    #     cmake --build desktopbuild
+    - name: Build Desktop
+      run: |
+        cmake -S . -B desktopbuild -DBUILD_DESKTOP=ON -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -G "${{ matrix.config.generators }}"
+        cmake --build desktopbuild --config ${{ matrix.config.build_type }}
 
     - name: Build Android
+      if: startsWith(matrix.config.os, 'ubuntu')
       run: |
-        cmake -S . -B androidbuild -DBUILD_ANDROID=ON -DCMAKE_BUILD_TYPE=Release
-        cmake --build androidbuild
+        cmake -S . -B androidbuild -DBUILD_ANDROID=ON -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -G "${{ matrix.config.generators }}"
+        cmake --build androidbuild --config ${{ matrix.config.build_type }}
 
     - uses: actions/upload-artifact@v2
       with:
