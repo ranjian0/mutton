@@ -19,22 +19,22 @@ jobs:
             cxx: "g++",
             generators: "Ninja"
           }
-        # - {
-        #     name: "Ubuntu_Latest_GCC",
-        #     os: ubuntu-latest,
-        #     build_type: "Release",
-        #     cc: "gcc",
-        #     cxx: "g++",
-        #     generators: "Ninja"
-        #   }
-        # - {
-        #     name: "macOS Latest Clang",
-        #     os: macos-latest,
-        #     build_type: "Release",
-        #     cc: "clang",
-        #     cxx: "clang++",
-        #     generators: "Ninja"
-        #   }
+        - {
+            name: "Ubuntu_Latest_GCC",
+            os: ubuntu-latest,
+            build_type: "Release",
+            cc: "gcc",
+            cxx: "g++",
+            generators: "Ninja"
+          }
+        - {
+            name: "macOS Latest Clang",
+            os: macos-latest,
+            build_type: "Release",
+            cc: "clang",
+            cxx: "clang++",
+            generators: "Ninja"
+          }
 
     steps:
     - uses: actions/checkout@v1
@@ -67,13 +67,12 @@ jobs:
  
     - name: Build Desktop
       run: |
-        cmake -S . -B desktopbuild -DBUILD_DESKTOP=ON
+        cmake -S . -B desktopbuild -DBUILD_DESKTOP=ON -DCMAKE_BUILD_TYPE=Release
         cmake --build desktopbuild
 
     - name: Build Android
-      if: startsWith(matrix.config.os, 'ubuntu')
       run: |
-        cmake -S . -B androidbuild -DBUILD_ANDROID=ON
+        cmake -S . -B androidbuild -DBUILD_ANDROID=ON -DCMAKE_BUILD_TYPE=Release
         cmake --build androidbuild
 
     - uses: actions/upload-artifact@v2

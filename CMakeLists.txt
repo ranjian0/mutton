@@ -157,6 +157,13 @@ if(BUILD_DESKTOP)
                                 extern/glfw/include
                                 extern/freetype/include 
     )
+    ADD_CUSTOM_COMMAND(TARGET MuttonDesktop POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rename
+        $<TARGET_FILE:MuttonDesktop>
+        $<TARGET_FILE_DIR:MuttonDesktop>/$<TARGET_FILE_PREFIX:MuttonDesktop>Mutton$<TARGET_FILE_SUFFIX:MuttonDesktop>
+        COMMENT "Renaming 'MuttonDesktop' to 'Mutton'"
+    )
+
 endif()
 
 # BUILD THE STATIC LIBRARY FOR ANDROID
@@ -268,7 +275,7 @@ if(BUILD_ANDROID)
         set(CMAKE_C_COMPILER ${compiler})
         set(CMAKE_C_COMPILER_AR ${ar})
         set(CMAKE_C_FLAGS "-DANDROIDVERSION=${ANDROIDVERSION} -DFT2_BUILD_LIBRARY=1 ${cflags}")
-        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib/android/${target})
+        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib/${OS_NAME}/android/${target})
         add_library(MuttonMobile${target} STATIC
                                     ${NDK}/sources/android/native_app_glue/android_native_app_glue.c
                                     ${FREETYPE_SRCS}
@@ -290,7 +297,7 @@ if(BUILD_ANDROID)
         ADD_CUSTOM_COMMAND(TARGET MuttonMobile${target} POST_BUILD
                             COMMAND ${CMAKE_COMMAND} -E rename
                             $<TARGET_FILE:${trg}>
-                            $<TARGET_FILE_DIR:${trg}>/$<TARGET_FILE_PREFIX:${trg}>MuttonMobile$<TARGET_FILE_SUFFIX:${trg}>
+                            $<TARGET_FILE_DIR:${trg}>/$<TARGET_FILE_PREFIX:${trg}>Mutton$<TARGET_FILE_SUFFIX:${trg}>
                             COMMENT "Renaming 'MuttonMobile${target}' to 'MuttonMobile'"
         )
 
