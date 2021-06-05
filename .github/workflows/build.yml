@@ -1,6 +1,10 @@
 name: Build Executable
 
-on: [push]
+on:
+  # Trigger the workflow on push to release branch
+  push:
+    branches:
+      - release
 
 jobs:
   build:
