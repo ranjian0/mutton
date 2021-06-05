@@ -107,7 +107,7 @@ static JNIEnv *_fc_jnienv(JavaVM *vm);
 
 #define UNUSED(x) (void)(x)
 
-#if defined(PLATFORM_WINDOWS)
+#if  0 //defined(PLATFORM_WINDOWS)
 // https://stackoverflow.com/questions/5404277/porting-clock-gettime-to-windows
 #include <stdint.h> // portable: uint64_t   MSVC: __int64 
 
